@@ -46,11 +46,15 @@ The setup script leverages two external files for package management, making it 
 
 You can edit these files directly to add or remove packages according to your preferences before running the setup script.
 
+## Important Note for Beginners
+
+**This script is designed for users who have already completed a basic Arch Linux installation and have an Xorg server set up.** If you used `archinstall` during your Arch Linux setup, selecting the Xorg option will typically fulfill this prerequisite. This script does *not* install Arch Linux itself, nor does it configure the fundamental Xorg display server if it's not already present.
+
 ## Prerequisites
 
 Before running the setup script, ensure you have:
 
-*   A fresh Arch Linux installation with an Xorg server.
+*   A fresh Arch Linux installation with an **Xorg server already installed and configured** (e.g., by selecting the Xorg option in `archinstall`).
 *   An active internet connection.
 *   A non-root user with `sudo` privileges.
 *   `git` installed (to clone this repository).
