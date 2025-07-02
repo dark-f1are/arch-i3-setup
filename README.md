@@ -4,33 +4,41 @@
 
 A streamlined setup script for Arch Linux that installs and configures i3 window manager along with essential tools for a productive development environment.
 
-## Features
+## i3 Configuration
 
-- i3 window manager configuration
-- Terminal setup (Alacritty)
-- File management (Thunar)
-- System monitoring tools
-- Modern CLI tools (exa, bat)
-- Bluetooth support
-- Display manager (ly)
+The i3 configuration uses `Mod4` (the Windows key) as the primary modifier key. Keybindings are organized into separate files for clarity.
 
-## Package Groups
+- **Mod Key:** `Mod4` (Windows key)
+- **Terminal:** Alacritty
+- **Launcher:** Rofi
+- **File Manager:** Thunar
+- **Browser:** Firefox (default, user selectable during setup)
+- **Code Editor:** VS Code
+- **Text Editor:** Mousepad
+- **Font:** JetBrainsMono Nerd Font 8 (increased from 6 for better readability)
+- **i3lock:** Improved readability of the lock command in `startup.conf`.
 
-The script installs these main package groups:
+## Package Management
 
-### Core & System
+The script installs packages defined in `packages.txt` (Arch repositories) and `yay_packages.txt` (AUR). These files can be easily customized to fit your needs.
+
+### Default Package Groups
+
+The default package lists include:
+
+#### Core & System
 - htop, exa, bat, alacritty
 - i3-wm, i3blocks, i3status-rust
-- brightnessctl, fastfetch
+- fastfetch
 - Bluetooth utilities
 - Network management
 
-### File Management
+#### File Management
 - Thunar with plugins
 - Archive support (zip, unzip, unrar)
 - Device mounting support (gvfs)
 
-### UI & Theming
+#### UI & Theming
 - Rofi (application launcher)
 - Dunst (notifications)
 - Flameshot (screenshots)
@@ -74,7 +82,7 @@ The script installs these main package groups:
 5. Installs all required packages (including AUR packages: i3lock-color, visual-studio-code-bin)
 6. Sets up system services (bluetooth, display manager)
 7. Creates basic directory structure
-8. Copies configuration files
+8. Creates symbolic links for configuration files (dotfiles) from the cloned repository to your home directory.
 9. Configures input devices
 
 ## Post-Installation

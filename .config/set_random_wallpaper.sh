@@ -19,6 +19,9 @@ DEFAULT_WALLPAPER="$HOME/.config/i3/default_wallpaper.jpg"
 # URL for fetching random wallpapers
 WALLPAPER_URL="https://minimalistic-wallpaper.demolab.com/?random"
 
+# Local wallpaper directory (optional)
+LOCAL_WALLPAPER_DIR="$HOME/Pictures/Wallpapers"
+
 # Function to download a wallpaper and save it to a specific file
 download_wallpaper() {
     if ! curl -s -L -o "$1" "$WALLPAPER_URL"; then
@@ -27,28 +30,45 @@ download_wallpaper() {
     return 0
 }
 
+# Function to get a random local wallpaper
+get_random_local_wallpaper() {
+    if [ -d "$LOCAL_WALLPAPER_DIR" ]; then
+        find "$LOCAL_WALLPAPER_DIR" -type f \( -name "*.jpg" -o -name "*.png" \) | shuf -n 1
+    fi
+}
+
 # Step 1: Use preloaded wallpaper if available
 if [ -f "$PRELOAD_WALLPAPER" ]; then
     mv "$PRELOAD_WALLPAPER" "$CURRENT_WALLPAPER"
 else
-    # Step 2: Download a new wallpaper to the temporary file
-    if ! download_wallpaper "$TMP_WALLPAPER"; then
-        notify-send "Wallpaper Update Failed" "No internet connection detected. Using default wallpaper." --icon=dialog-error
-        # Use a fallback local wallpaper if available
-        if [ -f "$DEFAULT_WALLPAPER" ]; then
-            cp "$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER"
-        else
-            notify-send "Wallpaper Update Failed" "No default wallpaper found." --icon=dialog-error
-            exit 1
-        fi
+    # Try to use a random local wallpaper first
+    RANDOM_LOCAL_WALLPAPER=$(get_random_local_wallpaper)
+    if [ -n "$RANDOM_LOCAL_WALLPAPER" ]; then
+        cp "$RANDOM_LOCAL_WALLPAPER" "$CURRENT_WALLPAPER"
     else
-        # Step 3: Move the temporary wallpaper to the current wallpaper path
-        mv "$TMP_WALLPAPER" "$CURRENT_WALLPAPER"
+        # Step 2: Download a new wallpaper to the temporary file
+        if ! download_wallpaper "$TMP_WALLPAPER"; then
+            notify-send "Wallpaper Update Failed" "No internet connection detected. Using default wallpaper." --icon=dialog-error
+            # Use a fallback local wallpaper if available
+            if [ -f "$DEFAULT_WALLPAPER" ]; then
+                cp "$DEFAULT_WALLPAPER" "$CURRENT_WALLPAPER"
+            else
+                notify-send "Wallpaper Update Failed" "No default wallpaper found." --icon=dialog-error
+                exit 1
+            fi
+        else
+            # Step 3: Move the temporary wallpaper to the current wallpaper path
+            mv "$TMP_WALLPAPER" "$CURRENT_WALLPAPER"
+        fi
     fi
 fi
 
 # Step 4: Set the wallpaper using feh
-feh --no-fehbg --bg-fill "$CURRENT_WALLPAPER"
+# Step 4: Set the wallpaper using feh
+if ! feh --no-fehbg --bg-fill "$CURRENT_WALLPAPER"; then
+    notify-send "Wallpaper Error" "Failed to set wallpaper with feh." --icon=dialog-error
+    exit 1
+fi
 
 # Step 5: Preload the next wallpaper in the background
 download_wallpaper "$PRELOAD_WALLPAPER" &

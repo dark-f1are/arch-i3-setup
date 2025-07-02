@@ -1,7 +1,7 @@
 # i3 config file (v4)
 
 # Mod key configuration (Mod1 corresponds to Alt)
-set $mod Mod1
+set $mod Mod4
 
 # Set a Wallpaper
 exec_always --no-startup-id ~/.config/set_random_wallpaper.sh
@@ -15,7 +15,7 @@ set $codeeditor code
 set $texteditor mousepad
 
 # Font settings
-font pango: JetBrainsMono Nerd Font 6
+font pango: JetBrainsMono Nerd Font 8
 
 # Gaps configuration
 gaps inner 8

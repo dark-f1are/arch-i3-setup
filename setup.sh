@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Color definitions - simplified and more reliable
 GREEN="\033[0;32m"
 RED="\033[0;31m"
@@ -8,25 +10,9 @@ BLUE="\033[0;34m"
 CYAN="\033[0;36m"
 NC="\033[0m"
 
-# Consolidated package groups
-PACKAGES=(
-    # Core & System
-    github-cli htop exa copyq bat upower alacritty brightnessctl nano nano-syntax-highlighting
-    mousepad bash-completion i3-wm i3blocks fastfetch wget xss-lock
-    bluez bluez-utils blueman nwg-look man-db ly network-manager-applet
-    # File Management
-    thunar thunar-volman thunar-archive-plugin gvfs gvfs-mtp
-    unrar zip unzip xarchiver
-    # UI & Theming
-    feh flameshot dunst rofi rofi-emoji i3status-rust tumbler
-    ttf-font-awesome ttf-jetbrains-mono-nerd noto-fonts-emoji
-    gnome-themes-standard papirus-icon-theme
-)
-
-YAY_PACKAGES=(
-    i3lock-color
-    visual-studio-code-bin
-)
+# Read package lists from files
+PACKAGES=($(<packages.txt))
+YAY_PACKAGES=($(<yay_packages.txt))
 
 # Add sudo credential caching
 cache_sudo_credentials() {
@@ -105,17 +91,17 @@ main() {
     install_yay_packages
 
     # Quick setup commands
-    sudo brightnessctl set 3% || true
+    # sudo brightnessctl set 3% || true # Uncomment and adjust if you want to set brightness on install
     sudo systemctl enable bluetooth ly.service
 
     # Create dirs and copy files
     mkdir -p ~/Documents ~/Downloads ~/Pictures ~/Music ~/Videos ~/Projects
     sudo mkdir -p /etc/X11/xorg.conf.d/
     sudo cp 40-libinput.conf /etc/X11/xorg.conf.d/
-    cp .bashrc ~/
-    cp -r .config ~/
+    ln -sf "$PWD/.bashrc" "$HOME/.bashrc"
+    ln -sf "$PWD/.config" "$HOME/.config"
     chmod +x ~/.config/set_random_wallpaper.sh
-    rm -f ~/.bash_profile
+    # rm -f ~/.bash_profile # Consider if this is always desired; .bashrc is typically used for interactive shells.
 
     echo -e "${GREEN}Installation Complete! Please reboot.${NC}"
 }

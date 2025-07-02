@@ -65,12 +65,12 @@ block = "menu"
 text = " \uf011 "
 [[block.items]]
 display = " -&gt; Power Off &lt;-"
-cmd = "poweroff"
+cmd = "systemctl poweroff"
 confirm_msg = "Are you sure you want to power off?"
 [[block.items]]
 display = " -&gt;   Sleep   &lt;-"
 cmd = "systemctl suspend"
 [[block.items]]
 display = " -&gt;  Reboot   &lt;-"
-cmd = "reboot"
+cmd = "systemctl reboot"
 confirm_msg = "Are you sure you want to reboot?"
